@@ -53,14 +53,21 @@ If EXIT is true and the project was not found, don't parse the projects roots ag
       (setf result (find-project-directory name :exit t)))
     result))
 
-(defun concat-filenames (base dir)
-  "Concat filenames. Expand a tilde in BASE.
-Create BASE if it doesn't exist."
+(defun ensure-directory (base)
+  "Create this directory if it doesn't exist.
+Needed to call `truename' to exand a tilde after it.
+BASE: directory name (string)."
+  (check-type base string)
   ;; ensure a trailing slash.
   (setf base
         (str:concat (string-right-trim (list #\/) base)
                     "/"))
-  (ensure-directories-exist base)
+  (ensure-directories-exist base))
+
+(defun concat-filenames (base dir)
+  "Concat filenames. Expand a tilde in BASE.
+Create BASE if it doesn't exist."
+  (ensure-directory base)
   ;; truename expands the tilde, but fails if the directory doesn't actually exist.
   ;; The tilde must be expanded for the following git clone command, that otherwise creates
   ;; ./~/my/foo instead of /home/user/my/foo.
