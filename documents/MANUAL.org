@@ -317,12 +317,15 @@ and other information within your cache.
 
 ** Cloning git repositories
 
-Use the  =git-clone= command to  clone a  git repository to  disk. The
+Use the  =git-clone= command to  clone a  Git repository to  disk. The
 clone command is run asynchronously.
 
-Change  the =next/git:*git-projects-roots*=  list to  define where  to
-look for existing git repositories. By default, the git-clone commands
-looks into =~/projects= and =~/work=.
+By default, the git-clone command looks into the following directories
+for existing projects:
+
+: "~/projects" "~/src" "~/work" "~/common-lisp" "~/quicklisp/local-projects"
+
+You can change the list like this:
 
 #+begin_src lisp
 (setf next/git:*git-projects-roots* '("~/my/directory"))

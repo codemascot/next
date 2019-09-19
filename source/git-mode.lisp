@@ -3,25 +3,24 @@
   (:export :*git-projects-roots*)
   (:documentation "Interact with Git repositories.
 
-New command: git-clone, to clone a git repository on disk.
+New command: git-clone, to clone a Git repository on disk.
 
-Change the `*git-projects-roots*' list to define where to look for
-existing git repositories on disk.
+Change the `*git-projects-roots*' list to define where to look for existing Git repositories on disk.
+
 The clone command is run asynchronously.
 
-Much can be added! We could clone on Github/Gitlab, be notified if we
-have unpushed changes, browse files in a text editor,...
+Much can be added! We could clone on Github/Gitlab, be notified if we have unpushed changes, browse files in a text editor...
 "))
 
 (in-package :next/git)
-(annot:enable-annot-syntax)
 
-
-(defparameter *git-projects-roots* '("~/projects" "~/work")
+(defparameter *git-projects-roots* '("~/projects" "~/src" "~/work" "~/common-lisp" "~/quicklisp/local-projects")
   "A list of directories to look for Git repositories to.")
+;; Possible improvement: specify the depth to look for projects alongside the directory.
+;; See magit-list-repositories.
 
 (defparameter *git-projects* '()
-  "Currently registered git projects.")
+  "Currently registered Git projects.")
 
 (defun search-git-directories (dir)
   "Search all directories that contain a .git/ subdirectory, one level deep inside DIR."
@@ -32,27 +31,27 @@ have unpushed changes, browse files in a text editor,...
        collect dir)))
 
 (defun parse-projects ()
-  "Scan `*git-projects-roots*' and register git repositories."
-  (setf *git-projects*
-        (mapcan #'search-git-directories *git-projects-roots*)))
+  "Scan `*git-projects-roots*'."
+  (mapcan #'search-git-directories *git-projects-roots*))
 
 (defun find-project-directory (name &key exit)
-  "Return the directory pathname of the project named NAME."
+  "Return the directory pathname of the project named NAME.
+If EXIT is true and the project was not found, don't parse the projects roots again."
   (unless *git-projects*
-    (parse-projects))
+    (setf *git-projects* (parse-projects)))
   (let ((result (find name *git-projects*
                       :key (lambda (dir)
-                             (car (last (str:split "/" (namestring dir) :omit-nulls t))))
+                              (alexandria:last-elt (str:split "/" (namestring dir) :omit-nulls t)))
                       :test #'string=)))
     (unless (or result
                 exit)
-      (parse-projects)
+      (setf *git-projects* (parse-projects))
       (setf result (find-project-directory name :exit t)))
     result))
 
 (defun concat-filenames (base dir)
   "Concat filenames. Handle a tilde in BASE.
-  Create BASE if it doesn't exist."
+Create BASE if it doesn't exist."
   ;; ensure a trailing slash.
   (setf base
         (str:concat (string-right-trim (list #\/) base)
@@ -93,4 +92,4 @@ have unpushed changes, browse files in a text editor,...
                   (error (c)
                     (log:warn "Error cloning ~a: ~a" project-name c)
                     (echo "There was an error cloning ~a." project-name)))))
-          (echo "Could not find the git project name.")))))
+          (echo "Could not find the Git project name.")))))
