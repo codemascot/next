@@ -68,6 +68,7 @@
                  (:file "noscript-mode")
                  (:file "file-manager-mode")
                  (:file "download-mode")
+                 (:file "vcs-mode")
                  ;; About
                  (:file "about")
                  ;; Port Compatibility Layers
