@@ -9,7 +9,11 @@ Change the `*vcs-projects-roots*' list to define where to look for existing repo
 
 The clone command is run asynchronously.
 
-Much can be added! We could clone on Github/Gitlab, be notified if we have unpushed changes, browse files in a text editor...
+***********************************************************************
+*Disclaimer*: this feature is meant to grow with Next 1.4 and onwards!
+***********************************************************************
+
+We could clone on Github/Gitlab, be notified if we have unpushed changes, browse files in a text editor, use hooks...
 "))
 
 (in-package :next/vcs)
