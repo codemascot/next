@@ -3,9 +3,12 @@
   (:export :*vcs-projects-roots*)
   (:documentation "Interact with Git repositories.
 
-New command: vcs-clone (alias git-clone), to clone a VCS repository on disk (Git only at the moment).
+New command: vcs-clone (alias git-clone), to clone a VCS repository on
+disk (Git only at the moment). rst rst rts rst rst rst rst rt rst rt
+rtr tr strs t rst rs t
 
-Change the `*vcs-projects-roots*' list to define where to look for existing repositories on disk.
+Change the `*vcs-projects-roots*' list to define where to look for
+existing repositories on disk.
 
 The clone command is run asynchronously.
 
@@ -13,13 +16,14 @@ The clone command is run asynchronously.
 *Disclaimer*: this feature is meant to grow with Next 1.4 and onwards!
 ***********************************************************************
 
-We could clone on Github/Gitlab, be notified if we have unpushed changes, browse files in a text editor, use hooks...
+We could clone on Github/Gitlab, be notified if we have unpushed
+changes, browse files in a text editor, use hooks...
 "))
 
 (in-package :next/vcs)
 
 (defparameter *vcs-projects-roots* '("~/projects" "~/src" "~/work" "~/common-lisp" "~/quicklisp/local-projects")
-  "A list of directories to look for VCS repositories to.")
+  "A list of directories to look for VCS repositories into.")
 ;; Possible improvement: specify the depth to look for projects alongside the directory.
 ;; See magit-list-repositories.
 
@@ -40,7 +44,7 @@ We could clone on Github/Gitlab, be notified if we have unpushed changes, browse
 
 (defun find-project-directory (name &key exit)
   "Return the directory pathname of the project named NAME.
-If EXIT is true and the project was not found, don't parse the projects roots again."
+If EXIT is non-nil and the project was not found, don't parse the project roots again."
   (unless *git-projects*
     (setf *git-projects* (parse-projects)))
   (let ((result (find name *git-projects*
@@ -53,6 +57,7 @@ If EXIT is true and the project was not found, don't parse the projects roots ag
       (setf result (find-project-directory name :exit t)))
     result))
 
+;XXX: add ftype declaration.
 (defun ensure-directory (base)
   "Create this directory if it doesn't exist.
 Needed to call `truename' to exand a tilde after it.
