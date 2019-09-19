@@ -62,7 +62,6 @@ If EXIT is non-nil and the project was not found, don't parse the project roots 
   "Create this directory if it doesn't exist.
 Needed to call `truename' to exand a tilde after it.
 BASE: directory name (string)."
-  (check-type base string)
   ;; ensure a trailing slash.
   (setf base
         (str:concat (string-right-trim (list #\/) base)
