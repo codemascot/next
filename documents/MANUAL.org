@@ -20,6 +20,7 @@ end-user allowing for infinite customization.
   - [[#clearing-the-echo-area][Clearing the Echo Area]]
   - [[#exiting][Exiting]]
   - [[#proxy-and-tor-support][Proxy and Tor support]]
+  - [[#cloning-git-repositories][Cloning git repositories]]
 - [[#advanced-topics][Advanced Topics]]
   - [[#execute-extended-command][Execute Extended Command]]
   - [[#help][Help]]
@@ -313,6 +314,19 @@ and other information within your cache.
  At the time of writing, there  are differences between the Gtk and the
  Qt port: the Gtk one sets  proxies per-buffer, whereas it is currently
  global for the Qt one.
+
+** Cloning git repositories
+
+Use the  =git-clone= command to  clone a  git repository to  disk. The
+clone command is run asynchronously.
+
+Change  the =next/git:*git-projects-roots*=  list to  define where  to
+look for existing git repositories. By default, the git-clone commands
+looks into =~/projects= and =~/work=.
+
+#+begin_src lisp
+(setf next/git:*git-projects-roots* '("~/my/directory"))
+#+end_src
 
 
 * Advanced Topics

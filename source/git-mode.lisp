@@ -3,11 +3,14 @@
   (:export :*git-projects-roots*)
   (:documentation "Interact with Git repositories.
 
-- clone a git repository
-  - [X] to disk
-  - on Github
-  - on Gitlab
-- be notified if you have unpushed changes
+New command: git-clone, to clone a git repository on disk.
+
+Change the `*git-projects-roots*' list to define where to look for
+existing git repositories on disk.
+The clone command is run asynchronously.
+
+Much can be added! We could clone on Github/Gitlab, be notified if we
+have unpushed changes, browse files in a text editor,...
 "))
 
 (in-package :next/git)
@@ -43,7 +46,6 @@
                       :test #'string=)))
     (unless (or result
                 exit)
-      (log:info "parsing again")
       (parse-projects)
       (setf result (find-project-directory name :exit t)))
     result))
@@ -56,7 +58,7 @@
         (str:concat (string-right-trim (list #\/) base)
                     "/"))
   (ensure-directories-exist base)
-  ;; truename fails if the directory doesn't actually exist.
+  ;; truename expands the tilde, but fails if the directory doesn't actually exist.
   (let* ((base-truename-path (truename base))
          (base-truename-string (namestring base-truename-path))
          (dir-string (string-trim (list #\/) (namestring dir)))
@@ -67,7 +69,7 @@
 (in-package :next)
 
 (define-command git-clone ()
-  "Clone the repository of the current url (if any), both in the user's Github account and locally."
+  "Clone the repository of the current url to disk (if any)."
   (with-result (url (buffer-get-url))
     (let* ((uri (quri:uri url))
            ;TODO: cleanup
